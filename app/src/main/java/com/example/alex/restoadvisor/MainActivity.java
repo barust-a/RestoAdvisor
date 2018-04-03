@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,15 +25,15 @@ public class MainActivity extends AppCompatActivity {
     private List<Restaurant> restaurants;
     private Retrofit retrofit;
     private final String TAG = "MainActivity";
+    public ListView myListView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         this.configureRetrofit();
-
-        this.getRestaurantsViaAPI();
+        myListView = (ListView) findViewById(R.id.listView);
     }
 
     /** Called when the user taps the Send button */
@@ -64,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 List<Restaurant> restaurantList = response.body();
                 if (restaurantList != null) {
                     for (Restaurant restaurant: restaurantList) {
-                        Log.d(TAG, "restaurant recu: " + restaurant.getId()+ " " + restaurant.getName());
+                        restaurants.add(restaurant);
                     }
-
+                    MyListViewAdapter.NotifySetChange();
                 } else {
                     Log.d(TAG, "onresponse: restaurant is empty " + response.body());
                 }
