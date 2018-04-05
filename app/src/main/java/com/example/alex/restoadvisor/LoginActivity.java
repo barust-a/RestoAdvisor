@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import static com.example.alex.restoadvisor.MainActivity.restaurantApi;
 
 public class LoginActivity extends AppCompatActivity {
 
-public static String token;
+public static String token = null;
 private final String TAG = "LoginActivity";
 private User user = new User();
 private String logEmail;
@@ -42,20 +43,29 @@ private String logPassword;
         EditText editText = (EditText) findViewById(R.id.password);
         logPassword = editText.getText().toString();
     }
+
+    void connected() {
+        final TextView text = (TextView) findViewById(R.id.isconnect);
+        text.setText("you are now connected you can go back to restaurants");
+    }
+
+    void notConnected() {
+        final TextView text = (TextView) findViewById(R.id.isconnect);
+        text.setText("invalid mail or password");
+    }
     public void Login(View view) {
         getLogEmail();
         getLogPassword();
-        Log.d(TAG, logEmail);
-        Log.d(TAG, logPassword);
         restaurantApi.login(logEmail, logPassword).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d(TAG, "onResponse:");
                 user = response.body();
                 if (user != null) {
-                    Log.d(TAG, "user connecter reussi " + user.getToken());
+                   token = user.getToken();
+                    connected();
                 } else {
-                    Log.d(TAG, "onresponse: login form is empty " + response.body());
+                    notConnected();
                 }
             }
 

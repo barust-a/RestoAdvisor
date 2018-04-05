@@ -26,4 +26,8 @@ public interface RestaurantAPI {
     @POST("login")
     Call<User> login(@Field("email") String email, @Field("password") String password);
 
+    @FormUrlEncoded
+    @POST("register")
+    Call<User> register(@Field("email") String email, @Field("password") String password, @Field("name") String name, @Field("c_password") String c_password);
+
 }
