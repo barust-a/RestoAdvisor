@@ -11,6 +11,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.alex.restoadvisor.MainActivity.restaurantApi;
 
@@ -21,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
 public static String token;
 private final String TAG = "LoginActivity";
-private User user;
+private User user = new User();
 private String logEmail;
 private String logPassword;
 
@@ -49,9 +51,9 @@ private String logPassword;
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d(TAG, "onResponse:");
-               User user = response.body();
+                user = response.body();
                 if (user != null) {
-                    Log.d(TAG, "user connecter reussi " + user.token);
+                    Log.d(TAG, "user connecter reussi " + user.getToken());
                 } else {
                     Log.d(TAG, "onresponse: login form is empty " + response.body());
                 }
@@ -59,7 +61,7 @@ private String logPassword;
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "onfailur: " + t.getMessage());
+                Log.e(TAG, "onFailur: " + t.getMessage());
             }
         });
     }
