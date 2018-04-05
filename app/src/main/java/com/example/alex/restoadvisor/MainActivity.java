@@ -3,6 +3,8 @@ package com.example.alex.restoadvisor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -21,9 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.restoadvisor.MESSAGE";
-    private static RestaurantAPI restaurantApi;
+    public static RestaurantAPI restaurantApi;
+    public static Retrofit retrofit;
     private List<Restaurant> restaurants;
-    private Retrofit retrofit;
     private final String TAG = "MainActivity";
     public ListView myListView;
 
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.configureRetrofit();
-        myListView = (ListView) findViewById(R.id.listView);
+        getRestaurantsViaAPI();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     /** Called when the user taps the Send button */
@@ -45,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
-    
-    private void configureRetrofit() {
+
+    public static void configureRetrofit() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-        retrofit = new Retrofit.Builder().baseUrl("http://192.168.0.22:8000/api/")
+        retrofit = new Retrofit.Builder().baseUrl("http://172.16.14.58:8000/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -65,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
                 List<Restaurant> restaurantList = response.body();
                 if (restaurantList != null) {
                     for (Restaurant restaurant: restaurantList) {
-                        restaurants.add(restaurant);
+                        //restaurants.add(restaurant);
+                        Log.d(TAG, "restaurant name is " + restaurant.getId());
                     }
-                    MyListViewAdapter.NotifySetChange();
+                    //MyListViewAdapter.NotifySetChange();
                 } else {
                     Log.d(TAG, "onresponse: restaurant is empty " + response.body());
                 }
