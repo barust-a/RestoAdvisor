@@ -29,7 +29,7 @@ public interface RestaurantAPI {
 
     //requetes menu
     @GET("menuResto/{id}")
-    Call<Restaurant> getMenuRestaurant(@Path("id") Integer id);
+    Call<Restaurant> getMenuRestaurant(@Path("id") String id);
 
 
     //requetes user
@@ -44,11 +44,10 @@ public interface RestaurantAPI {
     //requete avis
     @FormUrlEncoded
     @POST("postcomment/{id}")
-    Call<Comment> postcomment(@Path("id") String id, @Field("comment") String comment, @Field("rate") Integer rate, @Header("Authorization") String token);
+    Call<Comment> postcomment(@Path("id") Integer id, @Field("comment") String comment, @Field("rate") Integer rate, @Header("Authorization") String token);
 
-
-
-
+    @GET("avisResto/{id}")
+    Call<List<Comment>> getAvisByResto(@Path("id") Integer id);
 
 
     @DELETE("/delete-resto/{id}")

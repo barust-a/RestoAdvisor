@@ -59,4 +59,10 @@ public class RestaurantActivity extends AppCompatActivity {
         intent.putExtra("id", idresto);
         startActivity(intent);
     }
+    public void SeeComment(View view) {
+        Intent intent = new Intent(this, CommentOnRestauActivity.class);
+        intent.putExtra("id", idresto);
+        startActivity(intent);
+    }
+
 }

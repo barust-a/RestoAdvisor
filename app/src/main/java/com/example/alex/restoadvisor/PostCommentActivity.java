@@ -21,29 +21,27 @@ public class PostCommentActivity extends AppCompatActivity {
     private Integer rate;
     private String mycomment;
 
-    private String idresto;
+    private Integer idresto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_comment);
-        Bundle extras = getIntent().getExtras();
-        String sidresto = extras.getString("id");
 
-        idresto = sidresto;
-        Log.e("leaelihfboaiherbfresto", "ce genre d'erreur" + idresto);
         setcommentrate();
     }
 
 
 public void setcommentrate() {
-    //RatingBar ratebar = findViewById(R.id.rateview);
+  //  RatingBar ratebar = findViewById(R.id.rateview);
 
-  //  rate = ratebar.getNumStars();
+//   rate = ratebar.getNumStars();
 rate = 4;
 
     EditText editText = (EditText) findViewById(R.id.commentview);
     mycomment = editText.getText().toString();
+    Log.e("leaelihfboaiherbfresto", "ce genre d'erreur" + mycomment );
+
 
 }
 
@@ -53,6 +51,9 @@ rate = 4;
     }
 
     public void postComment(View view) {
+        String sidresto = getIntent().getStringExtra("id");
+        idresto = Integer.parseInt(sidresto);
+        Log.e("leaelihfboaiherbfresto", "ce genre d'erreur" + idresto + mycomment + rate );
         restaurantApi.postcomment(idresto, mycomment, rate, "Bearer "  + token ).enqueue(new Callback<Comment>() {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
