@@ -1,5 +1,6 @@
 package com.example.alex.restoadvisor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public myListViewAdapter MyListViewAdaptater;
     private EditText editText;
     private Button button;
+    public static String token = null;
+
 
 
     @Override
@@ -46,16 +50,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.configureRetrofit();
         getRestaurantsViaAPI();
-
+         Button logButton = (Button) findViewById(R.id.login);
+         if (token != null) {
+             logButton.setVisibility(View.GONE);
+         }
         myListView = (ListView) findViewById(R.id.listView);
         editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
         restaurants = new ArrayList<>();
         Restaurant resto = new Restaurant();
-        getRestaurantsViaAPI();
         this.MyListViewAdaptater = new myListViewAdapter(getApplicationContext(), restaurants);
         this.myListView.setAdapter(MyListViewAdaptater);
-        button.setOnClickListener(new View.OnClickListener() {
+        Restaurant restaurant1 = new Restaurant();
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?>parent,View v, int position, long id){
+
+                Restaurant restaurant1 = restaurants.get(position);
+                Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
+                intent.putExtra("id", restaurant1.getId());
+                intent.putExtra("name", restaurant1.getName());
+                intent.putExtra("description",restaurant1.getDescription());
+                intent.putExtra("phone",restaurant1.getPhone());
+                intent.putExtra("localisation",restaurant1.getLocalisation());
+                intent.putExtra("rate",restaurant1.getRate());
+                intent.putExtra("opentime",restaurant1.getOpenTime());
+                intent.putExtra("closetime",restaurant1.getCloseTime());
+                //based on item add info to intent
+                startActivity(intent);
+            }
+        });
+
+        /*button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String Name = editText.getText().toString().trim();
@@ -66,18 +93,18 @@ public class MainActivity extends AppCompatActivity {
                 MyListViewAdaptater.notifyDataSetChanged();
 
             }
-        });
+        });*/
     }
 
     /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
+    /*public void sendMessage(View view) {
         Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.editText);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
 
-    }
+    }*/
 
     public static void configureRetrofit() {
         Gson gson = new GsonBuilder()
@@ -116,6 +143,39 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "onfailur: " + t.getMessage());
             }
         });
+    }
+
+    public void reset_list(){
+        restaurants = new ArrayList<>();
+        MyListViewAdaptater.notifyDataSetChanged();
+    }
+
+    public void getRestoByName(View view){
+        EditText editText = (EditText) findViewById(R.id.editText);
+        String name = editText.getText().toString();
+        restaurantApi.getRestaurantByName(name).enqueue(new Callback<Restaurant>() {
+            @Override
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                Log.d(TAG, "onResponse:");
+                Restaurant restaurant = response.body();
+                if (restaurant != null) {
+                    reset_list();
+                    Log.d(TAG, "onresponse:  " +restaurant.getName());
+                } else {
+                    Log.d(TAG, "onresponse: restaurant is empty " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
+                Log.e(TAG, "onFailur: " + t.getMessage());
+            }
+        });
+    }
+
+    public void login(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
 }

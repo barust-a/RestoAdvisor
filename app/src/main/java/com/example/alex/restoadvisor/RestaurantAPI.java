@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 public interface RestaurantAPI {
 
@@ -21,6 +22,14 @@ public interface RestaurantAPI {
     @GET("restos/{id}")
     Call<List<Restaurant>> getRestaurantById(@Path("id") Integer id);
 
+    @GET("restoName/{name}")
+    Call<Restaurant> getRestaurantByName(@Path("name") String name);
+
+    //requetes menu
+    @GET("menuResto/{id}")
+    Call<Restaurant> getMenuRestaurant(@Path("id") Integer id);
+
+
     //requetes user
     @FormUrlEncoded
     @POST("login")
@@ -29,5 +38,10 @@ public interface RestaurantAPI {
     @FormUrlEncoded
     @POST("register")
     Call<User> register(@Field("email") String email, @Field("password") String password, @Field("name") String name, @Field("c_password") String c_password);
+
+    //requete avis
+    @FormUrlEncoded
+    @POST("postcomment/{id}")
+    Call<User> login(@Field("comment") String comment, @Field("rate") Integer rate);
 
 }

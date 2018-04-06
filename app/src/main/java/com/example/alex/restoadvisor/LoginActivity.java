@@ -17,13 +17,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.alex.restoadvisor.MainActivity.restaurantApi;
-
-
+import static com.example.alex.restoadvisor.MainActivity.token;
 
 
 public class LoginActivity extends AppCompatActivity {
 
-public static String token = null;
 private final String TAG = "LoginActivity";
 private User user = new User();
 private String logEmail;
