@@ -1,5 +1,6 @@
 package com.example.alex.restoadvisor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public static Retrofit retrofit;
     private List<Restaurant> restaurants;
     private final String TAG = "MainActivity";
-    public ListView myListView;
+    public ListView listView;
 
 
     @Override
@@ -35,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.configureRetrofit();
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+        getRestaurantsViaAPI();
+
     }
 
     /** Called when the user taps the Send button */
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-        retrofit = new Retrofit.Builder().baseUrl("http://172.16.14.58:8000/api/")
+        retrofit = new Retrofit.Builder().baseUrl("http://172.16.15.194:8000/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -66,12 +67,13 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
                 Log.d(TAG, "onResponse:");
                 List<Restaurant> restaurantList = response.body();
+
                 if (restaurantList != null) {
                     for (Restaurant restaurant: restaurantList) {
-                        //restaurants.add(restaurant);
                         Log.d(TAG, "restaurant name is " + restaurant.getId());
+                        //restaurants.add(restaurant);
                     }
-                    //MyListViewAdapter.NotifySetChange();
+                    //myListViewadapter.notifyDataSetChanged();
                 } else {
                     Log.d(TAG, "onresponse: restaurant is empty " + response.body());
                 }

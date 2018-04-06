@@ -1,5 +1,6 @@
 package com.example.alex.restoadvisor;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,12 @@ private String logPassword;
         final TextView text = (TextView) findViewById(R.id.isconnect);
         text.setText("invalid mail or password");
     }
+
+    public void registerbutton(View view2) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
     public void Login(View view) {
         getLogEmail();
         getLogPassword();
