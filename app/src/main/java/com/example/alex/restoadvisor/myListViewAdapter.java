@@ -36,7 +36,8 @@ public class myListViewAdapter extends BaseAdapter {
         //textViewRestaurantName.setTextColor(Color.parseColor("#FFFFFF"));
                 //textViewRestaurantId.setTextColor(Color.parseColor("#FFFFFF"));
                textViewRestaurantName.setText(restaurant.getName());
-               textViewRestaurantId.setId(restaurant.getId());
+               textViewRestaurantId.setText(restaurant.getId());
+        //textViewRestaurantId.setId(restaurant.getId());
                return convertView;
     }
 }
