@@ -25,78 +25,42 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class Affiche extends AppCompatActivity {
+
     public static final String EXTRA_MESSAGE = "com.example.restoadvisor.MESSAGE";
     public static RestaurantAPI restaurantApi;
     public static Retrofit retrofit;
-    private List<Restaurant> restaurants;
+    private List<Menu> menus;
+    private List<Avis> avis;
     private final String TAG = "MainActivity";
-    public ListView myListView;
-    public MyListViewAdaptater myListViewAdaptater;
+    public ListView ListMenu1;
+    public ListView ListCom;
+    public MenuAdaptater menuAdaptater;
+    public AvisAdapteter avisAdapteter;
     private EditText editText;
     private Button button;
+    private int id;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.resto_affiche);
 
-        myListView = (ListView)findViewById(R.id.list);
-        editText = (EditText)findViewById(R.id.editText);
-        button = (Button)findViewById(R.id.button);
-        restaurants = new ArrayList<>();
+        ListMenu1 = (ListView) findViewById(R.id.list_menu);
+        ListCom = (ListView) findViewById(R.id.list_avis);
+        editText = (EditText) findViewById(R.id.editText);
+        button = (Button) findViewById(R.id.button);
+        menus = new ArrayList<>();
+        avis = new ArrayList<>();
 
-        Restaurant resto = new Restaurant();
-        resto.setName("Pizza");
-        resto.setId(1);
-        restaurants.add(resto);
-
-        this.myListViewAdaptater = new MyListViewAdaptater(getApplicationContext(), restaurants);
-        this.myListView.setAdapter(myListViewAdaptater);
-
-        /*this.configureRetrofit();
-        getRestaurantsViaAPI();*/
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String Name = editText.getText().toString().trim();
-                Restaurant restaurant1 = new Restaurant();
-                restaurant1.setName(Name);
-                restaurant1.setId(1);
-                restaurants.add(restaurant1);
-                myListViewAdaptater.notifyDataSetChanged();
-            }
-        });
-
+        this.menuAdaptater = new MenuAdaptater(getApplicationContext(), menus);
+        this.ListMenu1.setAdapter(menuAdaptater);
+        this.avisAdapteter = new AvisAdapteter(getApplicationContext(), avis);
+        this.ListCom.setAdapter(avisAdapteter);
     }
 
-    public void goto_login(View view){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    /** Called when the user taps the Send button */
-    /**public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-
-    }
-
-    public void sendMessage(View view) {
-        String Name = editText.getText().toString().trim();
-        Restaurant restaurant1 = new Restaurant();
-        restaurant1.setName(Name);
-        restaurant1.setId(1);
-        restaurants.add(restaurant1);
-        myListViewAdaptater.notifyDataSetChanged();
-    }*/
-
-    public static void configureRetrofit() {
+/**    public static void configureRetrofit() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -104,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-         restaurantApi = retrofit.create(RestaurantAPI.class);
+        restaurantApi = retrofit.create(RestaurantAPI.class);
     }
 
     private void getRestaurantsViaAPI() {
@@ -130,6 +94,5 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "onfailure: " + t.getMessage());
             }
         });
-    }
-
+    }*/
 }
