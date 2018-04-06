@@ -8,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,13 +24,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+
+
+
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.example.restoadvisor.MESSAGE";
     public static RestaurantAPI restaurantApi;
     public static Retrofit retrofit;
     private List<Restaurant> restaurants;
     private final String TAG = "MainActivity";
-    public ListView listView;
+    public ListView myListView;
+    public myListViewAdapter MyListViewAdaptater;
+    private EditText editText;
+    private Button button;
 
 
     @Override
@@ -38,6 +47,26 @@ public class MainActivity extends AppCompatActivity {
         this.configureRetrofit();
         getRestaurantsViaAPI();
 
+        myListView = (ListView) findViewById(R.id.listView);
+        editText = (EditText) findViewById(R.id.editText);
+        button = (Button) findViewById(R.id.button);
+        restaurants = new ArrayList<>();
+        Restaurant resto = new Restaurant();
+        getRestaurantsViaAPI();
+        this.MyListViewAdaptater = new myListViewAdapter(getApplicationContext(), restaurants);
+        this.myListView.setAdapter(MyListViewAdaptater);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Name = editText.getText().toString().trim();
+                Restaurant restaurant1 = new Restaurant();
+                restaurant1.setName(Name);
+                restaurant1.setId(1);
+                restaurants.add(restaurant1);
+                MyListViewAdaptater.notifyDataSetChanged();
+
+            }
+        });
     }
 
     /** Called when the user taps the Send button */
@@ -66,14 +95,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Restaurant>> call, Response<List<Restaurant>> response) {
                 Log.d(TAG, "onResponse:");
-                List<Restaurant> restaurantList = response.body();
+                List<Restaurant> restaurantList;
+                restaurantList = response.body();
 
                 if (restaurantList != null) {
                     for (Restaurant restaurant: restaurantList) {
-                        Log.d(TAG, "restaurant name is " + restaurant.getId());
-                        //restaurants.add(restaurant);
+                        if (restaurant != null) {
+                            Log.d(TAG, "restaurant name is " + restaurant.getId());
+                            restaurants.add(restaurant);
+                        }
                     }
-                    //myListViewadapter.notifyDataSetChanged();
+                    MyListViewAdaptater.notifyDataSetChanged();
                 } else {
                     Log.d(TAG, "onresponse: restaurant is empty " + response.body());
                 }
